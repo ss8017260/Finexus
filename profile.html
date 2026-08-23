@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#18221e">
+  <title>Finexus | Your information</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+    .profile-page { width: min(100%, 560px); }
+    .profile-card { padding: 34px; border: 1px solid rgba(255,255,255,.65); border-radius: 14px; background: rgba(255,255,255,.93); box-shadow: 0 24px 70px rgba(24,34,30,.2); animation: setup-arrive .55s cubic-bezier(.2,.8,.2,1) both; }
+    .profile-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 31px; }
+    .profile-brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: var(--lime); background: var(--ink); font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; }
+    .profile-brand-name { font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 700; }
+    .profile-page h1 { font-family: 'Space Grotesk', sans-serif; font-size: 29px; letter-spacing: -.9px; }
+    .profile-intro { color: var(--muted); font-size: 12px; line-height: 1.55; margin-top: 8px; }
+    .profile-page-form { display: grid; gap: 14px; margin-top: 26px; }
+    .profile-page-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .profile-page label { display: grid; gap: 7px; color: var(--muted); font-size: 10px; font-weight: 700; }
+    .profile-page input { width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid var(--line); border-radius: 7px; color: var(--ink); background: #fbfcfa; outline: none; }
+    .profile-page input:focus { border-color: #9cbd48; box-shadow: 0 0 0 3px rgba(201,232,106,.25); }
+    .profile-page button { width: 100%; margin-top: 3px; }
+    .profile-hint { color: var(--muted); text-align: center; font-size: 10px; margin-top: 16px; }
+    @media (max-width: 560px) { .profile-card { padding: 25px; } .profile-page-fields { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="profile-page">
+    <section class="profile-card">
+      <div class="profile-brand"><div class="profile-brand-mark">F</div><div class="profile-brand-name">Finexus</div></div>
+      <h1>Tell us about you.</h1>
+      <p class="profile-intro">We’ll use these details to shape your expense dashboard, savings goals, and financial insights.</p>
+      <form class="profile-page-form" id="profilePageForm">
+        <label>YOUR NAME<input id="userName" type="text" maxlength="40" required placeholder="e.g. Priya Sharma"></label>
+        <label>EMAIL OR ACCOUNT LABEL<input id="userEmail" type="text" maxlength="60" required placeholder="e.g. personal account"></label>
+        <div class="profile-page-fields"><label>MONTHLY INCOME<input id="userIncome" type="number" min="1" step="1" required placeholder="e.g. 30000"></label><label>SAVINGS GOAL<input id="userGoal" type="number" min="1" step="1" required placeholder="e.g. 10000"></label></div>
+        <button class="primary-button" type="submit">Continue to Finexus</button>
+      </form>
+      <div class="profile-hint">Your information stays on this device.</div>
+    </section>
+  </main>
+  <script>
+    const existing = JSON.parse(localStorage.getItem('finexusUser') || '{}');
+    if (existing.name) { document.getElementById('userName').value = existing.name; document.getElementById('userEmail').value = existing.email || ''; document.getElementById('userIncome').value = existing.income || ''; document.getElementById('userGoal').value = existing.goal || ''; }
+    document.getElementById('profilePageForm').addEventListener('submit', event => { event.preventDefault(); const updatedUser = { name: document.getElementById('userName').value.trim(), email: document.getElementById('userEmail').value.trim(), income: Number(document.getElementById('userIncome').value), goal: Number(document.getElementById('userGoal').value) }; const users = JSON.parse(localStorage.getItem('finexusUsers') || '[]'); const userIndex = users.findIndex(user => user.email === existing.email || user.name === existing.name); if (userIndex >= 0) users[userIndex] = updatedUser; else users.push(updatedUser); localStorage.setItem('finexusUsers', JSON.stringify(users)); localStorage.setItem('finexusUser', JSON.stringify(updatedUser)); localStorage.setItem('finexusLoggedIn', 'true'); window.location.href = 'index.html'; });
+  </script>
+</body>
+</html>

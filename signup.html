@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#18221e">
+  <title>Finexus | Sign up</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+    .signup-page { width: min(100%, 560px); }
+    .signup-card { padding: 34px; border: 1px solid rgba(255,255,255,.7); border-radius: 14px; background: rgba(255,255,255,.72); backdrop-filter: blur(18px) saturate(120%); -webkit-backdrop-filter: blur(18px) saturate(120%); box-shadow: 0 24px 70px rgba(24,34,30,.2), inset 0 1px 0 rgba(255,255,255,.7); animation: auth-float 5s ease-in-out infinite; }
+    .signup-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 31px; }
+    .signup-brand-mark { display: grid; place-items: center; position: relative; width: 36px; height: 36px; border-radius: 10px; color: var(--lime); background: var(--ink); font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; }
+    .signup-brand-mark::after { content: '↗'; position: absolute; right: 3px; bottom: 1px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 9px; }
+    .signup-brand-name { font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 700; }
+    .signup-page h1 { font-family: 'Space Grotesk', sans-serif; font-size: 29px; letter-spacing: -.9px; }
+    .signup-intro { color: var(--muted); font-size: 12px; line-height: 1.55; margin-top: 8px; }
+    .signup-form { display: grid; gap: 14px; margin-top: 26px; }
+    .signup-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .signup-page label { display: grid; gap: 7px; color: var(--muted); font-size: 10px; font-weight: 700; }
+    .signup-page input { width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid var(--line); border-radius: 7px; color: var(--ink); background: #fbfcfa; outline: none; }
+    .signup-page input:focus { border-color: #9cbd48; box-shadow: 0 0 0 3px rgba(201,232,106,.25); }
+    .signup-error { display: none; padding: 10px 12px; border-radius: 7px; color: #a94436; background: #fce8e3; font-size: 11px; }
+    .signup-error.show { display: block; }
+    .signup-page button { width: 100%; margin-top: 3px; }
+    .login-link { display: block; width: 100%; margin-top: 10px; padding: 11px 0; border: 1px solid var(--line); border-radius: 7px; color: var(--ink); background: transparent; text-align: center; font-size: 12px; font-weight: 700; text-decoration: none; }
+    .login-link:hover { border-color: #9cbd48; background: #f4f8ed; }
+    .signup-hint { color: var(--muted); text-align: center; font-size: 10px; margin-top: 16px; }
+    @keyframes auth-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+    @media (max-width: 560px) { .signup-card { padding: 25px; } .signup-fields { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="signup-page">
+    <section class="signup-card">
+      <div class="signup-brand"><div class="signup-brand-mark">F</div><div class="signup-brand-name">Finexus</div></div>
+      <h1>Create your Finexus account.</h1>
+      <p class="signup-intro">Tell us a little about yourself so your expense dashboard starts with the right numbers and goals.</p>
+      <form class="signup-form" id="signupForm">
+        <label>UNIQUE USER NAME<input id="signupName" type="text" maxlength="40" required placeholder="e.g. Priya Sharma"></label>
+        <label>GMAIL ADDRESS<input id="signupEmail" type="email" maxlength="60" required placeholder="e.g. priya@gmail.com"></label>
+        <div class="signup-fields"><label>MONTHLY INCOME<input id="signupIncome" type="number" min="1" step="1" required placeholder="e.g. 30000"></label><label>SAVINGS GOAL<input id="signupGoal" type="number" min="1" step="1" required placeholder="e.g. 10000"></label></div>
+        <div class="signup-error" id="signupError"></div>
+        <button class="primary-button" type="submit">Create account and continue</button>
+        <a class="login-link" href="login.html">Already have an account? Log in</a>
+      </form>
+      <div class="signup-hint">Your information is stored locally on this device.</div>
+    </section>
+  </main>
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', event => { event.preventDefault(); const name = document.getElementById('signupName').value.trim(); const email = document.getElementById('signupEmail').value.trim().toLowerCase(); const error = document.getElementById('signupError'); const users = JSON.parse(localStorage.getItem('finexusUsers') || '[]'); if (!email.endsWith('@gmail.com')) { error.textContent = 'Please use a valid Gmail address ending in @gmail.com.'; error.classList.add('show'); return; } if (users.some(user => user.name.toLowerCase() === name.toLowerCase())) { error.textContent = 'That user name is already taken. Choose a unique name.'; error.classList.add('show'); return; } if (users.some(user => user.email.toLowerCase() === email)) { error.textContent = 'That Gmail address is already registered on this device.'; error.classList.add('show'); return; } const newUser = { name, email, income: Number(document.getElementById('signupIncome').value), goal: Number(document.getElementById('signupGoal').value) }; users.push(newUser); localStorage.setItem('finexusUsers', JSON.stringify(users)); localStorage.setItem('finexusUser', JSON.stringify(newUser)); localStorage.setItem('finexusLoggedIn', 'true'); window.location.href = 'index.html'; });
+  </script>
+</body>
+</html>
